@@ -8,6 +8,9 @@ class Genre(models.Model):
     name_am = models.CharField(max_length=250)
     name_en = models.CharField(max_length=250)
 
+    def __str__(self):
+        return self.name_ru
+
 
 class Person(models.Model):
     fname_ru = models.CharField(max_length=250)
@@ -16,6 +19,9 @@ class Person(models.Model):
     lname_am = models.CharField(max_length=250)
     fname_en = models.CharField(max_length=250)
     lname_en = models.CharField(max_length=250)
+
+    def __str__(self):
+        return "%s %s" % (self.fname_ru, self.lname_ru)
 
 
 class Performer(models.Model):
