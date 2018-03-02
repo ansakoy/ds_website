@@ -5,3 +5,7 @@ from django.http import HttpResponse
 
 def index(request):
     return HttpResponse('<h1>Здесь будет каталог</h1>')
+
+
+def genre_detail(request, genre_id):
+    return HttpResponse("<h2>Detail for genre id: " + str(genre_id) + "</h2>")
