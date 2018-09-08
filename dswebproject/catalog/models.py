@@ -11,6 +11,9 @@ class Genre(models.Model):
     def __str__(self):
         return self.name_ru
 
+    class Meta:
+        app_label = 'catalog'
+
 
 class Person(models.Model):
     fname_ru = models.CharField(max_length=250)
@@ -51,23 +54,27 @@ class Opus(models.Model):
     comment_ru = models.CharField(max_length=1000)
     comment_am = models.CharField(max_length=1000)
     comment_en = models.CharField(max_length=1000)
-    year = models.DateField()
+    year = models.DateField(null=True)
     genre = models.ForeignKey(
         Genre,
         on_delete=models.PROTECT,
-        verbose_name="Жанр"
+        verbose_name="Жанр",
+        null=True
     )
     libretto_by = models.ManyToManyField(
         Person,
         related_name="libr_authors",
-        verbose_name="Автор либретто"
+        verbose_name="Автор либретто",
     )
-    performance = models.ManyToManyField(
+    performances = models.ManyToManyField(
         Performance,
-        verbose_name="Исполнения"
+        verbose_name="Исполнения",
     )
     lyrics_by = models.ManyToManyField(
         Person,
         related_name="lyr_authors",
-        verbose_name="Автор текста"
+        verbose_name="Автор текста",
     )
+
+    def __str__(self):
+        return "%s" % self.title_ru
