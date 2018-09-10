@@ -54,7 +54,7 @@ class Opus(models.Model):
     comment_ru = models.CharField(max_length=1000)
     comment_am = models.CharField(max_length=1000)
     comment_en = models.CharField(max_length=1000)
-    year = models.DateField(null=True)
+    year = models.CharField(max_length=4, null=True)
     genre = models.ForeignKey(
         Genre,
         on_delete=models.PROTECT,
