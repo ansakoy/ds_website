@@ -18,10 +18,10 @@ class Genre(models.Model):
 class Person(models.Model):
     fname_ru = models.CharField(max_length=250)
     lname_ru = models.CharField(max_length=250)
-    fname_am = models.CharField(max_length=250)
-    lname_am = models.CharField(max_length=250)
-    fname_en = models.CharField(max_length=250)
-    lname_en = models.CharField(max_length=250)
+    fname_am = models.CharField(max_length=250, null=True)
+    lname_am = models.CharField(max_length=250, null=True)
+    fname_en = models.CharField(max_length=250, null=True)
+    lname_en = models.CharField(max_length=250, null=True)
 
     def __str__(self):
         return "%s %s" % (self.fname_ru, self.lname_ru)
