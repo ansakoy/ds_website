@@ -4,9 +4,9 @@ from django.db import models
 
 
 class Genre(models.Model):
-    name_ru = models.CharField(max_length=250)
-    name_am = models.CharField(max_length=250)
-    name_en = models.CharField(max_length=250)
+    name_ru = models.CharField(max_length=250, null=True)
+    name_am = models.CharField(max_length=250, null=True)
+    name_en = models.CharField(max_length=250, null=True)
 
     def __str__(self):
         return self.name_ru

@@ -10,7 +10,7 @@ from django.core.wsgi import get_wsgi_application
 get_wsgi_application()
 
 django.setup()
-from catalog.models import Opus, Person
+from catalog.models import Opus, Person, Genre
 
 
 def parse_persons(string):
@@ -106,8 +106,49 @@ def get_persons_csv(source_file):
     print('RESULT FOR PERSONS', Person.objects.all().count())
 
 
+def get_genre(row):
+    results = dict()
+    if row:
+        if len(row[6]):
+            results['ru'] = row[6]  # ru
+        if len(row[11]):
+            results['am'] = row[11]  # am
+        if len(row[16]):
+            results['en'] = row[16]  # en
+    if len(results):
+        instance_id = results.get('ru')
+        this_genre = Genre.objects.filter(name_ru=instance_id)
+        if this_genre.count():
+            this_genre = this_genre.first()
+            if not this_genre.name_am and results.get('am'):
+                this_genre.name_am = results['am']
+                this_genre.save()
+            if not this_genre.name_en and results.get('en'):
+                this_genre.name_en = results['en']
+                this_genre.save()
+        else:
+            this_genre = Genre(name_ru=results['ru'],
+                               name_am=results.get('am'),
+                               name_en=results.get('en'))
+            this_genre.save()
+
+
+def populate_genre_from_csv(source_file):
+    with open(source_file, 'r', encoding='utf-8') as handler:
+        reader = csv.reader(handler)
+        count = 0
+        for row in reader:
+            if count > 0:
+                get_genre(row)
+            count += 1
+    print('DONE')
+    print('ADDED {} GENRES'.format(Genre.objects.all().count()))
+
+
+
 if __name__ == '__main__':
-    get_persons_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v1.csv')
+    # get_persons_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v1.csv')
+    populate_genre_from_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v1.csv')
 
 
 # o = Opus.objects.all()
