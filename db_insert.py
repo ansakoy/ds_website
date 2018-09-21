@@ -19,8 +19,12 @@ def parse_persons(string):
         persons = string.split(',')
         for person in persons:
             person = person.strip().split()
-            lname = person[-1]
-            fname = ' '.join(person[: -1])
+            if len(person) == 1:
+                fname = person[0].replace('-', ' ')
+                lname = None
+            else:
+                lname = person[-1]
+                fname = ' '.join(person[: -1])
             processed_persons.append((fname, lname))
     return processed_persons
 
@@ -115,6 +119,10 @@ def get_genre(row):
             results['am'] = row[11]  # am
         if len(row[16]):
             results['en'] = row[16]  # en
+    return results
+
+
+def insert_genres(results):
     if len(results):
         instance_id = results.get('ru')
         this_genre = Genre.objects.filter(name_ru=instance_id)
@@ -139,16 +147,62 @@ def populate_genre_from_csv(source_file):
         count = 0
         for row in reader:
             if count > 0:
-                get_genre(row)
+                genre = get_genre(row)
+                insert_genres(genre)
             count += 1
     print('DONE')
     print('ADDED {} GENRES'.format(Genre.objects.all().count()))
 
 
+def populate_opus(source_file):
+    with open(source_file, 'r', encoding='utf-8') as handler:
+        reader = csv.reader(handler)
+        count = 0
+        for row in reader:
+            if count > 0:
+                opus = Opus()
+                opus.table_pk = str(row[0])
+                opus.save()
+                genre = get_genre(row)
+                if len(genre):
+                    genre_id = genre.get('ru', '-')
+                    genre_entry = Genre.objects.filter(name_ru=genre_id)
+                    if genre_entry.count():
+                        opus.genre = genre_entry.first()
+                libr_by = parse_persons(row[3])
+                if len(libr_by):
+                    for name in libr_by:
+                        person = Person.objects.filter(fname_ru=name[0], lname_ru=name[1])
+                        if person.count():
+                            opus.libretto_by.add(person.first())
+                lyr_by = parse_persons(row[4])
+                if len(lyr_by):
+                    for name in lyr_by:
+                        person = Person.objects.filter(fname_ru=name[0], lname_ru=name[1])
+                        if person.count():
+                            opus.lyrics_by.add(person.first())
+                opus.year = str(row[1])
+                opus.title_ru = row[2]
+                if len(row[7]):
+                    opus.title_am = row[7]
+                if len(row[12]):
+                    opus.title_en = row[12]
+                if len(row[5]):
+                    opus.comment_ru = row[5]
+                if len(row[10]):
+                    opus.comment_am = row[10]
+                if len(row[15]):
+                    opus.comment_en = row[15]
+                opus.save()
+            count += 1
+    print('DONE')
+    print('ADDED {} WORKS'.format(Opus.objects.all().count()))
+
 
 if __name__ == '__main__':
-    # get_persons_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v1.csv')
-    populate_genre_from_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v1.csv')
+    # get_persons_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v2.csv')
+    # populate_genre_from_csv(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v2.csv')
+    populate_opus(r'C:\Users\USER\Documents\PythonProjects\ds_website\Sources\source_catalog_v2.csv')
 
 
 # o = Opus.objects.all()
