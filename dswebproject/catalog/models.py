@@ -17,7 +17,7 @@ class Genre(models.Model):
 
 class Person(models.Model):
     fname_ru = models.CharField(max_length=250)
-    lname_ru = models.CharField(max_length=250)
+    lname_ru = models.CharField(max_length=250, null=True)
     fname_am = models.CharField(max_length=250, null=True)
     lname_am = models.CharField(max_length=250, null=True)
     fname_en = models.CharField(max_length=250, null=True)
@@ -48,6 +48,7 @@ class Performance(models.Model):
 
 
 class Opus(models.Model):
+    table_pk = models.CharField(max_length=10, primary_key=True)
     title_ru = models.CharField(max_length=500)
     title_am = models.CharField(max_length=500)
     title_en = models.CharField(max_length=500)

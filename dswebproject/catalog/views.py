@@ -12,7 +12,7 @@ def index(request):
     all_works = Opus.objects.all()
     html = ''
     for work in all_works:
-        url = '/catalog/' + str(work.id) + '/'
+        url = '/catalog/' + str(work.table_pk) + '/'
         html += '<a href="' + url + '">' + work.title_ru + ' (' + work.title_am + ')' + '</a><br>'
     return HttpResponse(html)
 
