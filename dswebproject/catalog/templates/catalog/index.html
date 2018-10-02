@@ -1,0 +1,13 @@
+{% if all_works %}
+<h3>Список сочинений</h3>
+    <ul>
+        {% for work in all_works %}
+        <!--<li><a href="catalog/{{ work.table_pk }}/">{{ work.title_ru }}</a></li>-->
+        <li><a href="{% url 'catalog:opus_detail' work.table_pk %}">{{ work.title_ru }}</a></li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+    <h3>Не удается загрузить список сочинений</h3>
+
+{% endif %}

@@ -1,20 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import Opus
 
-# Create your views here.
-
-
-# def index(request):
-#     return HttpResponse('<h1>Здесь будет каталог</h1>')
 
 def index(request):
     all_works = Opus.objects.all()
-    html = ''
-    for work in all_works:
-        url = '/catalog/' + str(work.table_pk) + '/'
-        html += '<a href="' + url + '">' + work.title_ru + ' (' + work.title_am + ')' + '</a><br>'
-    return HttpResponse(html)
+    context = {'all_works': all_works}
+    return render(request, 'catalog/index.html', context)
 
 
 def genre_detail(request, genre_id):
@@ -22,4 +14,5 @@ def genre_detail(request, genre_id):
 
 
 def opus_detail(request, opus_id):
-    return HttpResponse("<h2>Detail for genre id: " + str(opus_id) + "</h2>")
+    work = get_object_or_404(Opus, table_pk=opus_id)
+    return render(request, 'catalog/detail.html', {'work': work})

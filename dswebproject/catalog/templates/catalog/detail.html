@@ -1,0 +1,27 @@
+<h2>{{ work.title_ru }}</h2>
+<h3>{{ work.genre.name_ru }}</h3>
+<h3>Год: {{ work.year }}</h3>
+<div>{{ work.comment_ru }}</div>
+
+{% if work.libretto_by.count %}
+
+
+<h3>Авторы либретто:</h3>
+<ul>
+        {% for person in work.libretto_by.all %}
+        <li>{{ person.fname_ru }} {{ person.lname_ru }}</li>
+        {% endfor %}
+</ul>
+
+{% endif %}
+
+{% if work.lyrics_by.count %}
+
+<h3>Авторы текста:</h3>
+<ul>
+        {% for person in work.lyrics_by.all %}
+        <li>{{ person.fname_ru }} {{ person.lname_ru }}</li>
+        {% endfor %}
+</ul>
+
+{% endif %}
