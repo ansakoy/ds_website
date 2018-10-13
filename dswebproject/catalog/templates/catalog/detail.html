@@ -1,3 +1,6 @@
+{% extends 'catalog/base.html' %}
+{% block body %}
+
 <h2>{{ work.title_ru }}</h2>
 <h3>{{ work.genre.name_ru }}</h3>
 <h3>Год: {{ work.year }}</h3>
@@ -25,3 +28,4 @@
 </ul>
 
 {% endif %}
+{% endblock %}
